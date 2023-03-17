@@ -1,0 +1,4 @@
+#ifndef PROCESSMANAGER_H
+#define PROCESSMANAGER_H
+
+#endif
