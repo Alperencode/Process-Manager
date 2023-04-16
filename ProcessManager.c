@@ -13,34 +13,49 @@ void Execute(){
     - `help`: Displays a list of available commands.
     */
 
-    int argSize = sizeof(args) / sizeof(char**); 
+    // int argSize = sizeof(args) / sizeof(char**); 
 
     if(strcmp(args[0], "start") == 0){
-        // Handle start
-        Start(args, argSize);
+        Start(args);
     }else if(strcmp(args[0], "stop") == 0){
-        // Handle stop
-        Stop(args, argSize);
+        // Stop(args);
     }else if(strcmp(args[0], "signal") == 0){
-        // Handle signal
-        Signal(args, argSize);
+        // Signal(args);
     }else if(strcmp(args[0], "info") == 0){
-        // Handle info
-        Info(args, argSize);
+        // Info(args);
     }else if(strcmp(args[0], "list") == 0){
-        // Handle list
-        List(args, argSize);
+        // List(args);
     }else if(strcmp(args[0], "help") == 0){
-        // Handle help
-        Help();
+        // Help();
     }else{
-        // Handle error
-        InputError();
+        // InputError();
     }
 
 }
 
-void Start(char **args, int argSize){
+void Start(char **args){
+    // Usage of this function could be changed later
+    // And it still has some bugs
+    int status = 0;
 
+    // Creating child process to execute command
+    pid_t pid = fork();
+
+    if(pid < 0)
+        die("Fork error [START]");
+    
+    else if(pid == 0){
+        // Child process
+        if(execvp(args[1], args) == -1) die("Execution error [START]");
+    }
+    else
+        // Parent process
+        do{
+            // Parent process waits until child process finish
+            waitpid(pid, &status, WUNTRACED);
+
+            // WIFEXITED   : program exited
+            // WIFSIGNALED : program killed by signal 
+        }while(!WIFEXITED(status) && !WIFSIGNALED(status));
 
 }

@@ -2,8 +2,8 @@
 
 int main(){
 
-    Execute();
-
+    // while(1)
+        Execute();
     return 0;
 
 }
