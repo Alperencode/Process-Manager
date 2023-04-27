@@ -35,9 +35,7 @@ void Execute(){
 
 void Start(char **args){
     // Usage of this function could be changed later
-    // And it still has some bugs
-    int status = 0;
-
+    
     // Creating child process to execute command
     pid_t pid = fork();
 
@@ -46,16 +44,30 @@ void Start(char **args){
     
     else if(pid == 0){
         // Child process
-        if(execvp(args[1], args) == -1) die("Execution error [START]");
+        args = RemoveSignalElement(args); // Removes "start" from array
+        if(execvp(args[0], args) == -1) die("Execution error [START]");
     }
-    else
+    else{
         // Parent process
-        do{
-            // Parent process waits until child process finish
-            waitpid(pid, &status, WUNTRACED);
+        wait(0);
+    }
 
-            // WIFEXITED   : program exited
-            // WIFSIGNALED : program killed by signal 
-        }while(!WIFEXITED(status) && !WIFSIGNALED(status));
+}
 
+char** RemoveSignalElement(char **args){
+    int i;
+    // Remove signals: "start", "kill"
+    for(i = 0; args[i + 1] != NULL; i++)
+        args[i] = args[i + 1];
+    args[i] = NULL; 
+
+    // Remove any trailing whitespace
+    for (i = 0; args[i] != NULL; i++) {
+        int len = strlen(args[i]);
+        while (len > 0 && isspace(args[i][len - 1])) {
+            args[i][len - 1] = '\0';
+            len--;
+        }
+    }
+    return args;
 }
