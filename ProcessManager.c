@@ -13,19 +13,20 @@ void Execute(){
     - `help`: Displays a list of available commands.
     */
 
-    // int argSize = sizeof(args) / sizeof(char**); 
+    char* command = args[0];
+    args = RemoveSignalElement(args); // Removes command from args array
 
-    if(strcmp(args[0], "start") == 0){
+    if(strcmp(command, "start") == 0){
         Start(args);
-    }else if(strcmp(args[0], "stop") == 0){
+    }else if(strcmp(command, "stop") == 0){
         // Stop(args);
-    }else if(strcmp(args[0], "signal") == 0){
+    }else if(strcmp(command, "signal") == 0){
         // Signal(args);
-    }else if(strcmp(args[0], "info") == 0){
+    }else if(strcmp(command, "info") == 0){
         // Info(args);
-    }else if(strcmp(args[0], "list") == 0){
+    }else if(strcmp(command, "list") == 0){
         // List(args);
-    }else if(strcmp(args[0], "help") == 0){
+    }else if(strcmp(command, "help") == 0){
         // Help();
     }else{
         // InputError();
@@ -41,15 +42,14 @@ void Start(char **args){
 
     if(pid < 0)
         die("Fork error [START]");
-    
     else if(pid == 0){
         // Child process
-        args = RemoveSignalElement(args); // Removes "start" from array
         if(execvp(args[0], args) == -1) die("Execution error [START]");
     }
     else{
         // Parent process
-        wait(0);
+        int status;
+        waitpid(pid, &status, 0);
     }
 
 }
@@ -62,12 +62,10 @@ char** RemoveSignalElement(char **args){
     args[i] = NULL; 
 
     // Remove any trailing whitespace
-    for (i = 0; args[i] != NULL; i++) {
+    for(i = 0; args[i] != NULL; i++){
         int len = strlen(args[i]);
-        while (len > 0 && isspace(args[i][len - 1])) {
-            args[i][len - 1] = '\0';
-            len--;
-        }
+        while(len > 0 && isspace(args[i][len - 1]))
+            args[i][len-- - 1] = '\0';
     }
     return args;
 }

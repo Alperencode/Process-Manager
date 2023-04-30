@@ -6,8 +6,8 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
-#include "InputParser.h"
 #include "Errors.h"
+#include "InputParser.h"
 
 void Execute();
 void Start(char** args);
