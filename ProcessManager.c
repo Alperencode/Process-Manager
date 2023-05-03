@@ -17,9 +17,11 @@ void Execute(){
     args = RemoveSignalElement(args); // Removes command from args array
 
     if(strcmp(command, "start") == 0){
-        Start(args);
+        if(Start(args) != 0)
+            die("Start command error");
     }else if(strcmp(command, "stop") == 0){
-        // Stop(args);
+        if(Stop(args) != 0)
+            die("Stop command error");
     }else if(strcmp(command, "signal") == 0){
         // Signal(args);
     }else if(strcmp(command, "info") == 0){
@@ -34,24 +36,42 @@ void Execute(){
 
 }
 
-void Start(char **args){
+/**
+ * Start process with given command and arguments
+ *
+ * @param args Command name to execute and its arguments as string array
+ * @return 0 for successfull execution, -1 for any errors
+ */
+int Start(char **args){
     // Usage of this function could be changed later
     
     // Creating child process to execute command
     pid_t pid = fork();
+    int status;
 
     if(pid < 0)
-        die("Fork error [START]");
+        // PID Error Case
+        return -1;
     else if(pid == 0){
         // Child process
-        if(execvp(args[0], args) == -1) die("Execution error [START]");
+        if(execvp(args[0], args) == -1) return -1;
     }
-    else{
+    else
         // Parent process
-        int status;
         waitpid(pid, &status, 0);
-    }
 
+    return 0;
+}
+
+/**
+ * <Summary>
+ *
+ * @param args <Summary>
+ * @return 0 for successfull execution, -1 for any errors
+ */
+int Stop(char **args){
+
+    return 0;
 }
 
 char** RemoveSignalElement(char **args){

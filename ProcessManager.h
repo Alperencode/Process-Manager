@@ -10,7 +10,8 @@
 #include "InputParser.h"
 
 void Execute();
-void Start(char** args);
+int Start(char** args);
+int Stop(char** args);
 char** RemoveSignalElement(char **args);
 
 #endif
