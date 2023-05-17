@@ -30,6 +30,8 @@ void Execute(){
         // List(args);
     }else if(strcmp(command, "help") == 0){
         // Help();
+    }else if(strcmp(command, "exit") == 0){
+        die("Program Exit");
     }else{
         // InputError();
     }
@@ -40,7 +42,7 @@ void Execute(){
  * Start process with given command and arguments
  *
  * @param args Command name to execute and its arguments as string array
- * @return 0 for successfull execution, -1 for any errors
+ * @return 0 for successful execution, -1 for any errors
  */
 int Start(char **args){
     // Usage of this function could be changed later
@@ -64,22 +66,30 @@ int Start(char **args){
 }
 
 /**
- * <Summary>
+ * Stops the given pid with kill command
  *
- * @param args <Summary>
+ * @param args Process pid to kill
  * @return 0 for successfull execution, -1 for any errors
  */
 int Stop(char **args){
-
-    return 0;
+    int pid = atoi(args[0]);
+    return kill(pid, SIGKILL); 
 }
 
+/**
+ * <Summary>
+ *
+ * @param args <Summary>
+ * @return <Summary>
+ */
 char** RemoveSignalElement(char **args){
-    int i;
+    int i = 0;
     // Remove signals: "start", "kill"
-    for(i = 0; args[i + 1] != NULL; i++)
-        args[i] = args[i + 1];
-    args[i] = NULL; 
+    if(args[i+1] != NULL){
+        for(i = 0; args[i + 1] != NULL; i++)
+            args[i] = args[i + 1];
+        args[i] = NULL; 
+    }
 
     // Remove any trailing whitespace
     for(i = 0; args[i] != NULL; i++){
