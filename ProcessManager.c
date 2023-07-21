@@ -27,7 +27,7 @@ void Execute(){
     }else if(strcmp(command, "info") == 0){
         // Info(args);
     }else if(strcmp(command, "list") == 0){
-        // List(args);
+        List();
     }else if(strcmp(command, "help") == 0){
         // Help();
     }else if(strcmp(command, "exit") == 0){
@@ -98,4 +98,26 @@ char** RemoveSignalElement(char **args){
             args[i][len-- - 1] = '\0';
     }
     return args;
+}
+
+void List(){
+    FILE* fp;
+    char path[1024];
+    char cmdline[1024];
+
+    printf("%-10s %s\n", "PID", "Command");
+
+    fp = popen("ps -e -o pid,cmd --no-header", "r");
+    if (fp == NULL)
+        perror("popen failed");
+
+    while (fgets(cmdline, sizeof(cmdline), fp) != NULL) {
+        int pid;
+        sscanf(cmdline, "%d %[^\n]", &pid, path);
+
+        // Print the process ID and command line
+        printf("%-10d %.*s\n", pid, 25, path);
+    }
+
+    pclose(fp);
 }

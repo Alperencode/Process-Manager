@@ -14,6 +14,7 @@
 void Execute();
 int Start(char** args);
 int Stop(char** args);
+void List();
 char** RemoveSignalElement(char **args);
 
 #endif
