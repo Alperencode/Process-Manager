@@ -3,7 +3,7 @@
 char** GetInput(){
     char input[1024];
 
-    printf("> ");
+    printf("\n> ");
     fflush(stdout);
     fgets(input, sizeof(input), stdin);
 
